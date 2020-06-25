@@ -123,7 +123,7 @@ def handle_data():
   titulo = request.form['titulo']
   cleantext = re.compile('<.*?>|[!-.:-@]')
   texto = re.sub(cleantext, '', texto)
-  nlp = spacy.load("pt")
+  nlp = spacy.load("pt-core-news-sm")
   conteudo = nlp(texto)
   texto = conteudo.text.split()
   retorno =faz_busca(texto)
