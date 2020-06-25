@@ -12,7 +12,6 @@ from unicodedata import normalize
 from flask import render_template
 from app import app
 from flask import request
-#cors = CORS(app, resource={r"/*":{"origins": "*"}})
 
 def Verbos(palavra):
   propa = re.compile(r'^(.*).amos$|ssemos$') 
@@ -123,7 +122,7 @@ def handle_data():
   titulo = request.form['titulo']
   cleantext = re.compile('<.*?>|[!-.:-@]')
   texto = re.sub(cleantext, '', texto)
-  nlp = spacy.load("pt-core-news-sm")
+  nlp = spacy.load("pt")
   conteudo = nlp(texto)
   texto = conteudo.text.split()
   retorno =faz_busca(texto)

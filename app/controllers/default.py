@@ -1,9 +1,10 @@
 import os
-from flask_cors import CORS
 from flask import render_template
 from app import app
 from app.models.forms import TextoForm
 from urllib import request
+from flask_cors import CORS
+
 
 cors = CORS(app, resource={r"/*":{"origins": "*"}})
 
