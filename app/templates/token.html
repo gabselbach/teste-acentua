@@ -4,19 +4,15 @@
 
 <div class="container">
     <div class="row">
-        {%for i in retorno %}
         <div class="col-md-4">
             <div class="card mb-4 box-shadow">
                 <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&bg=55595c&fg=eceeef&text=Thumbnail"
                     alt="Card image cap">
                 <div class="card-body">
-                    <p class="card-text">
-                        palavra da redação: {{i.PALAVRAANT}}</br>
-                        palavra do vop: {{i.PALAVRAVOP}}</br>
-                        <!--Regra verb: {{i.REGRAVERB}}</br>-->
-                        silaba: {{ i.SILABA}}</br>
-                        classe: {{i.CLASSE}}</br>
-                    </p>
+                   
+                    {%for j in range(retorno|length) %}
+                        <p class="card-text">{{retorno[j]}}</p>
+                    {%endfor%}
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group">
                             <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
@@ -25,10 +21,9 @@
                         <small class="text-muted">9 mins</small>
                     </div>
                 </div>
-
             </div>
         </div>
-        {%endfor%}
+
     </div>
 </div>
 {% endblock %}

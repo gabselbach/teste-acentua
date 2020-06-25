@@ -1,9 +1,12 @@
-<html>
+<!DOCTYPE html>
     <head>
-      <meta charset="utf-8">
+      <!--<script src="https://cdn.tiny.cloud/1/3wbg3lso8tji0f59htxy5sf42tlq25s2ltu32uuf0gt5w5yx/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+      -->
+        <meta charset="utf-8">
       <title>Acentua Fácil!</title>
        <link rel="stylesheet" href="{{ url_for('static', 
        filename="css/bootstrap.min.css")}}">
+     
     </head>
 <body>
     <main>
@@ -24,7 +27,15 @@
         {% endblock%}
       </div>
     </main>       
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+   <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>                 
+    <script>
+      tinymce.init({
+        selector: 'textarea',
+        content_css: '//www.tiny.cloud/css/codepen.min.css',
+        image_title: true,
+        tinycomments_author: 'Gabriella Selbach',
+      });
+    </script>-->
   </body>
   </html>
