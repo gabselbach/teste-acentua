@@ -12,8 +12,6 @@ from unicodedata import normalize
 from flask import render_template
 from app import app
 from flask import request
-from nltk.tokenize import word_tokenize
-from nltk.tokenize import RegexpTokenizer
 #cors = CORS(app, resource={r"/*":{"origins": "*"}})
 
 def Verbos(palavra):
@@ -28,7 +26,6 @@ def Verbos(palavra):
   elif(oxi.search(palavra)):
     return "oxítona"
   else:
-    #print('não entrou em regra de acentuação de verbo\n')
     return 0
   return 0
 def terminacao(palavra,classe):
@@ -50,17 +47,15 @@ def terminacao(palavra,classe):
   nmono=0
   j = palavra
   x = normalize('NFKD', palavra).encode('ASCII','ignore').decode('ASCII')
-  if(acento.search(str(j))):
-    if(classe=='oxítona'):
-      if(oxi.search(str(x))):
-        return "oxítona"
-    elif(classe=='paroxítona'):  
-      if(paro.search(j)):
-        return "paroxítona"
-        #data.at[i,"REGRA"]="Regra por terminação paroxítona"
-    elif(classe=='proparoxítona'):
-      return "proparoxítona"
-      #data.at[i,"REGRA"]="Regra todo proparoxítona é acentuada"
+  #if(acento.search(str(j))):
+  if(classe=='oxítona'):
+    if(oxi.search(str(x))):
+      return "oxítona"
+  elif(classe=='paroxítona'):  
+    if(paro.search(j)):
+      return "paroxítona"
+  elif(classe=='proparoxítona'):
+    return "proparoxítona"
   return 0
 def faz_busca(token):
   dataNova=[]
@@ -131,14 +126,19 @@ def handle_data():
   nlp = spacy.load("pt")
   conteudo = nlp(texto)
   texto = conteudo.text.split()
-  rt = conteudo.copy()
-  for i in rt:
-    num = Verbos(i['PALAVRA'])
+  retorno =faz_busca(texto)
+  for j in range(len(retorno)):
+    num = Verbos(retorno[j]['PALAVRAANT'])
     if(num==0):
-      i['REGRAVERB']="palavra não verbo"
+      retorno[j]['REGRAVERB']="palavra não verbo"
     else:
-      i['REGRAVERB']=num
-  return render_template('mostraconteudo.html',titulo = titulo,texto = texto)
+      retorno[j]['REGRAVERB']=num
+    num = terminacao(retorno[j]['PALAVRAANT'],retorno[j]['CLASSE'])
+    if(num==0):
+      retorno[j]['REGRANaoVERB']="Terminação não bate com a regra"
+    else:
+      retorno[j]['REGRANaoVERB']= num
+  return render_template('mostraconteudo.html',titulo = titulo,texto = retorno)
 @app.route('/VOP')
 def VOP():
   lista={'fertil','amor','aviao','insuficiencia','quente','amavamos'}
@@ -151,23 +151,8 @@ def VOP():
     else:
       i['REGRAVERB']=num
     num = terminacao(i['PALAVRAANT'],i['CLASSE'])
-  return render_template('processa.html',retorno = retorno)
-@app.route('/RARA')
-def RARA():
-  lista ='avião'
-  return render_template('novo.html',retorno = lista)
-@app.route('/PROCE')
-def PROCE():
-  lista={'fertil','amor','avião','insuficiencia','quente'}
-  retorno =faz_busca(lista)
-  data = pd.DataFrame(retorno)
-  for (i,row) in data.iterrows():
-    p = row['PALAVRA']
-    c = row['CLASSE']
-  return render_template('processa.html',retorno = retorno)
-@app.route('/RER')
-def RER():
-  texto = 'Quinze anos! é a idade das primeiras palpitações, a idade dos sonhos, a idade das ilusões amorosas, a idade de Julieta; é a flor, é a vida, e a esperança, o céu azul, o campo verde, o lago tranqüilo, a aurora que rompe, a calhandra que canta, Romeu que desce a escada de seda, o último beijo que as brisas da manhã ouvem e levam, como um eco, ao céu.'
-  tokenizer = RegexpTokenizer('\w+|\$[\d\.][\d\.]+|\S+/[, ]')
-  tre =  word_tokenize(str(texto))
-  return render_template('token.html',retorno = tre)
+    if(num==0):
+      i['REGRANaoVERB']="Terminação não bate com a regra"
+    else:
+      i['REGRANaoVERB']= num
+  return render_template('processa.html',retorno = rt)
