@@ -12,6 +12,10 @@ from unicodedata import normalize
 from flask import render_template
 from app import app
 from flask import request
+import nltk    
+nltk.download('punkt') 
+from nltk import tokenize    
+
 
 def Verbos(palavra):
   propa = re.compile(r'^(.*).amos$|ssemos$') 
@@ -118,13 +122,14 @@ def faz_busca(token):
   return dataNova
 @app.route('/handle_data', methods=['POST'])
 def handle_data():
+  inicio = time.time()
   texto = request.form.get('texto')
   titulo = request.form['titulo']
   cleantext = re.compile('<.*?>|[!-.:-@]')
   texto = re.sub(cleantext, '', texto)
-  nlp = spacy.load("pt")
-  conteudo = nlp(texto)
-  texto = conteudo.text.split()
+  #nlp = spacy.load("pt")
+  #conteudo = nlp(texto)
+  texto = tokenize.word_tokenize(texto, language='portuguese')  
   retorno =faz_busca(texto)
   for j in range(len(retorno)):
     num = Verbos(retorno[j]['PALAVRAANT'])
@@ -137,7 +142,9 @@ def handle_data():
       retorno[j]['REGRANaoVERB']="Terminação não bate com a regra"
     else:
       retorno[j]['REGRANaoVERB']= num
-  return render_template('mostraconteudo.html',titulo = titulo,texto = retorno)
+    final=time.time()
+    t = final-inicio
+  return render_template('mostraconteudo.html',titulo = titulo,texto = retorno, tempo = t)
 @app.route('/VOP')
 def VOP():
   lista={'fertil','amor','aviao','insuficiencia','quente','amavamos'}
