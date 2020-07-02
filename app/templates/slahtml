@@ -1,0 +1,26 @@
+class="card-text">
+{% if texto[j]['PALAVRAANT']!=texto[j]['PALAVRAVOP'] %}
+    <p style="color:red"> Palavras diferentes</p>
+    palavra da redação: {{ texto[j]['PALAVRAANT']}}</br>
+    {% if texto[j]['REGRAVERB']!=0 %}
+        Regra verb: {{texto[j]['REGRAVERB']}}
+    {% elif texto[j]['REGRANaoVERB']!=0 %}
+        Regra não verb: {{texto[j]['REGRANaoVERB']}}</br>
+    {% endif %}
+    {% if texto[j]['PALAVRAVOP']!='NAN' %}
+        palavra do vop: {{ texto[j]['PALAVRAVOP'] }}</br>
+        silaba: {{ texto[j]['SILABA']}}</br>
+        classe: {{ texto[j]['CLASSE']}}</br>
+    {% endif %}
+    {% if texto[j]['MONOSSILABA']%}
+    <p style="color:darkolivegreen"> Palavra Monossilabica</p>
+    {% endif%}
+</p>
+<div class="d-flex justify-content-between align-items-center">
+<div class="btn-group">
+    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+</div>
+<small class="text-muted">9 mins</small>
+</div>
+{% endif %}

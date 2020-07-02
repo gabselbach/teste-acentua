@@ -12,9 +12,6 @@ from unicodedata import normalize
 from flask import render_template
 from app import app
 from flask import request
-import nltk    
-nltk.download('punkt') 
-from nltk import tokenize    
 
 
 def Verbos(palavra):
@@ -32,9 +29,11 @@ def Verbos(palavra):
     return 0
   return 0
 def terminacao(palavra,classe):
-  mono = re.compile(r'^(.*).a$|as$|a$|as$|e$|es$|o$|os$')
-  oxi =  re.compile(r'^(.*).a$|as$|e$|es$|o$|os$|em$|ens$')
-  paro =  re.compile(r'^(.*).i$|is$|us$|r$|l$|x$|n$|um$|uns$|ão$|ãos$|ã$|ãs$|ps$|on$|ons$')
+  monossílaba = re.compile(r'^(.*).a$|as$|a$|as$|e$|es$|o$|os$')
+  oxítona     =  re.compile(r'^(.*).a$|as$|e$|es$|o$|os$|em$|ens$')
+  paroxítona  =  re.compile(r'^(.*).i$|is$|us$|r$|l$|x$|n$|um$|uns$|ão$|ãos$|ã$|ãs$|ps$|on$|ons$')
+  
+  
   acento = re.compile('à|[á-ú]|ê|ô|ã|õ|í') 
   x='';
   monon =0
@@ -52,13 +51,13 @@ def terminacao(palavra,classe):
   x = normalize('NFKD', palavra).encode('ASCII','ignore').decode('ASCII')
   #if(acento.search(str(j))):
   if(classe=='oxítona'):
-    if(oxi.search(str(x))):
-      return "oxítona"
+    if(oxítona.search(str(x))):
+      return "Palavra classificada como oxítona, pela sílaba mais forte e terminação"
   elif(classe=='paroxítona'):  
-    if(paro.search(j)):
-      return "paroxítona"
+    if(paroxítona.search(j)):
+      return "Palavra classificada como paroxítona, pela sílaba mais forte e terminação"
   elif(classe=='proparoxítona'):
-    return "proparoxítona"
+    return "Palavra classificada como proparoxítona, pela sílaba mais forte"
   return 0
 def faz_busca(token):
   dataNova=[]
@@ -73,12 +72,14 @@ def faz_busca(token):
     soup = BeautifulSoup(page.text, 'html.parser')
     palavras = soup.find_all('td',{'title':'Palavra'}) 
     classe=''
-    if(not palavras):
+    if(not palavras or len(k)==1):
       temp = {
-      'PALAVRAVOP':k,
       'PALAVRAANT':k,
+      'PALAVRAVOP':'NAN',
       'SILABA': 'NAN',
-      'CLASSE':'NAN'
+      'CLASSE':'NAN',
+      'FORTE': 'NAN',
+      'MONOSSILABA':0
       }
       dataNova.append(temp)
     else:
@@ -91,6 +92,11 @@ def faz_busca(token):
           forte =  re.sub('<[^>]+?>', '', str(i.find('u')))
           silaba = pala.split(')')[1]
           silsepara = silaba.split('·')
+          if(len(silsepara)==1):
+            mono=1
+          else:
+            mono=0
+
           oxi=''
           paro=''
           propa=''
@@ -109,10 +115,12 @@ def faz_busca(token):
           elif(propa==forte):
             classe='proparoxítona'
           temp = {
-              'PALAVRAVOP':link,
               'PALAVRAANT':k,
+              'PALAVRAVOP':link,
               'SILABA':silaba,
-              'CLASSE':classe
+              'CLASSE':classe,
+              'FORTE': normalize('NFKD', str(forte)).encode('ASCII','ignore').decode('ASCII'),
+              'MONOSSILABA':mono
           }
           dataNova.append(temp)
           t=1
@@ -122,32 +130,24 @@ def faz_busca(token):
   return dataNova
 @app.route('/handle_data', methods=['POST'])
 def handle_data():
-  inicio = time.time()
   texto = request.form.get('texto')
   titulo = request.form['titulo']
   cleantext = re.compile('<.*?>|[!-.:-@]')
   texto = re.sub(cleantext, '', texto)
-  #nlp = spacy.load("pt")
-  #conteudo = nlp(texto)
-  texto = tokenize.word_tokenize(texto, language='portuguese')  
+  nlp = spacy.load("pt")
+  conteudo = nlp(texto)
+  texto = conteudo.text.split()
   retorno =faz_busca(texto)
+  inicio = time.time()
   for j in range(len(retorno)):
-    num = Verbos(retorno[j]['PALAVRAANT'])
-    if(num==0):
-      retorno[j]['REGRAVERB']="palavra não verbo"
-    else:
-      retorno[j]['REGRAVERB']=num
-    num = terminacao(retorno[j]['PALAVRAANT'],retorno[j]['CLASSE'])
-    if(num==0):
-      retorno[j]['REGRANaoVERB']="Terminação não bate com a regra"
-    else:
-      retorno[j]['REGRANaoVERB']= num
-    final=time.time()
-    t = final-inicio
-  return render_template('mostraconteudo.html',titulo = titulo,texto = retorno, tempo = t)
+    retorno[j]['REGRAVERB'] =  Verbos(retorno[j]['PALAVRAANT'])
+    retorno[j]['REGRANaoVERB'] = terminacao(retorno[j]['PALAVRAANT'],retorno[j]['CLASSE'])
+  final=time.time()
+  t = final-inicio
+  return render_template('mostraconteudo.html',titulo = titulo,texto = retorno)
 @app.route('/VOP')
 def VOP():
-  lista={'fertil','amor','aviao','insuficiencia','quente','amavamos'}
+  lista={'fertil','amor','aviao','insuficiencia','quente','amavamos','hoje','tao','o'}
   retorno =faz_busca(lista)
   rt = retorno.copy()
   for i in rt:

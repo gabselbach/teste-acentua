@@ -4,22 +4,40 @@
 
 <div class="container">
     <div class="row">
-        <h3>o tempo foi de:{{ tempo}}</h3></br>
-        <h3>{{ titulo}}</h3>
+        <h3>{{ t}}</h3></br>
+        <h3>{{ titulo }}</h3>
         {% for j in range(texto|length) %}
+        {% if texto[j]['PALAVRAANT']!=texto[j]['PALAVRAVOP'] and (texto[j]['PALAVRAANT']|length > 1)  %}
         <div class="col-md-4">
             <div class="card mb-4 box-shadow">
-                <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&bg=55595c&fg=eceeef&text=Thumbnail"
-                    alt="Card image cap">
                 <div class="card-body">
-
                     <p class="card-text">
-                        palavra da redação: {{ texto[j]['PALAVRAANT']}}</br>
-                        palavra do vop: {{ texto[j]['PALAVRAVOP'] }}</br>
-                        Regra verb: {{ texto[j]['REGRAVERB'] }}</br>
-                        Regra não verb: {{texto[j]['REGRANaoVERB']}}</br>
-                        silaba: {{ texto[j]['SILABA']}}</br>
-                        classe: {{ texto[j]['CLASSE']}}</br>
+                      
+                            <p style="color:red"> Palavras diferentes</p>
+                            palavra da redação: {{ texto[j]['PALAVRAANT']}}</br>
+                                {% if texto[j]['REGRAVERB']!=0 %}
+                                    classe da palavra:{{texto[j]['REGRAVERB']}}</br>
+                                    {% if texto[j]['REGRAVERB']=='proparoxítona' %}
+                                        Palavra classificada como proparoxítona, pois é um verbo terminado em (amos,ssemos)
+                                    {% elif texto[j]['REGRAVERB']=='paroxítona' %}    
+                                        Palavra classificada como paroxítona, pois é um verbo terminado em (eis,reis,sseis)
+                                    {% el%}
+                                    {% endif %}
+                                {% else %}
+                                    Regra não verb: {{texto[j]['REGRANaoVERB']}}</br>
+                                {% endif%}
+                                {% if texto[j]['PALAVRAVOP']!='NAN' %}
+                                    palavra do vop: {{ texto[j]['PALAVRAVOP'] }}</br>
+                                    Divisão sílabica: {{ texto[j]['SILABA']}}</br>
+                                    Sílaba forte que deve ser acentuada: {{texto[j]['FORTE'] }}
+                                    classe da palavra: {{ texto[j]['CLASSE']}}</br>
+                                {% endif %}
+
+                                
+                               
+                            {% if texto[j]['MONOSSILABA']%}
+                            <p style="color:darkolivegreen"> Palavra Monossilabica</p>
+                            {% endif%}
                     </p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group">
@@ -28,9 +46,11 @@
                         </div>
                         <small class="text-muted">9 mins</small>
                     </div>
+                   
                 </div>
             </div>
         </div>
+        {%endif%}
         {%endfor%}
     </div>
 </div>
