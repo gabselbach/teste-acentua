@@ -14,6 +14,13 @@ from app import app
 from flask import request
 
 
+def Monossilaba(palavra):
+  mono = {'já','tão'}
+  for x in mono:
+    pala =  normalize('NFKD', x).encode('ASCII','ignore').decode('ASCII')
+    if(palavra==pala):
+      return "Monossílaba que deve receber acento. Você escreveu ",palavra, " mas o correto seria ",x," "
+  return 0 
 def Verbos(palavra):
   propa = re.compile(r'^(.*).amos$|ssemos$') 
   paro = re.compile(r'^(.*).eis$|reis$|sseis')
@@ -126,7 +133,17 @@ def faz_busca(token):
           t=1
           break
         if(t==1):
-          break   
+          break
+      if(t!=1):
+        temp = {
+        'PALAVRAANT':k,
+        'PALAVRAVOP':'NAN',
+        'SILABA': 'NAN',
+        'CLASSE':'NAN',
+        'FORTE': 'NAN',
+        'MONOSSILABA':0
+        }
+        dataNova.append(temp) 
   return dataNova
 @app.route('/handle_data', methods=['POST'])
 def handle_data():
@@ -134,31 +151,29 @@ def handle_data():
   titulo = request.form['titulo']
   cleantext = re.compile('<.*?>|[!-.:-@]')
   texto = re.sub(cleantext, '', texto)
-  nlp = spacy.load("pt")
+  nlp = spacy.load("pt_core_news_sm")
   conteudo = nlp(texto)
   texto = conteudo.text.split()
   retorno =faz_busca(texto)
   inicio = time.time()
   for j in range(len(retorno)):
-    retorno[j]['REGRAVERB'] =  Verbos(retorno[j]['PALAVRAANT'])
-    retorno[j]['REGRANaoVERB'] = terminacao(retorno[j]['PALAVRAANT'],retorno[j]['CLASSE'])
+    if(retorno[j]['PALAVRAVOP']=='NAN'):
+      retorno[j]['REGRAVERB'] =  Verbos(retorno[j]['PALAVRAANT'])
+      retorno[j]['REGRANaoVERB'] = 0
+    else:
+      retorno[j]['REGRAVERB'] =  Verbos(retorno[j]['PALAVRAANT'])
+      retorno[j]['REGRANaoVERB'] = terminacao(retorno[j]['PALAVRAANT'],retorno[j]['CLASSE'])
+
+    if(retorno[j]['REGRAVERB']==0 and retorno[j]['REGRANaoVERB']==0 and retorno[j]['PALAVRAVOP']=='NAN' ):
+      retorno[j]['n']= 'palavra não classificada'
+
   final=time.time()
   t = final-inicio
-  return render_template('mostraconteudo.html',titulo = titulo,texto = retorno)
+  return render_template('mostraconteudo.html',titulo = titulo,texto = retorno,t=t)
 @app.route('/VOP')
 def VOP():
   lista={'fertil','amor','aviao','insuficiencia','quente','amavamos','hoje','tao','o'}
   retorno =faz_busca(lista)
   rt = retorno.copy()
-  for i in rt:
-    num = Verbos(i['PALAVRAANT'])
-    if(num==0):
-      i['REGRAVERB']="palavra não verbo"
-    else:
-      i['REGRAVERB']=num
-    num = terminacao(i['PALAVRAANT'],i['CLASSE'])
-    if(num==0):
-      i['REGRANaoVERB']="Terminação não bate com a regra"
-    else:
-      i['REGRANaoVERB']= num
-  return render_template('processa.html',retorno = rt)
+  t = len(lista)
+  return render_template('processa.html',retorno = retorno,t=t)

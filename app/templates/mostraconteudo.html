@@ -4,49 +4,43 @@
 
 <div class="container">
     <div class="row">
-        <h3>{{ t}}</h3></br>
-        <h3>{{ titulo }}</h3>
+        <h2>Redação: {{ titulo }}</h2><br>
+        <h5>Tempo de processamento: {{ t }}</h5><br>
+        <h5>Palavras que apresentam algum tipo de erro de acentuação:</h5><br>
         {% for j in range(texto|length) %}
         {% if texto[j]['PALAVRAANT']!=texto[j]['PALAVRAVOP'] and (texto[j]['PALAVRAANT']|length > 1)  %}
         <div class="col-md-4">
             <div class="card mb-4 box-shadow">
                 <div class="card-body">
                     <p class="card-text">
-                      
-                            <p style="color:red"> Palavras diferentes</p>
-                            palavra da redação: {{ texto[j]['PALAVRAANT']}}</br>
-                                {% if texto[j]['REGRAVERB']!=0 %}
-                                    classe da palavra:{{texto[j]['REGRAVERB']}}</br>
-                                    {% if texto[j]['REGRAVERB']=='proparoxítona' %}
-                                        Palavra classificada como proparoxítona, pois é um verbo terminado em (amos,ssemos)
-                                    {% elif texto[j]['REGRAVERB']=='paroxítona' %}    
-                                        Palavra classificada como paroxítona, pois é um verbo terminado em (eis,reis,sseis)
-                                    {% el%}
-                                    {% endif %}
-                                {% else %}
-                                    Regra não verb: {{texto[j]['REGRANaoVERB']}}</br>
-                                {% endif%}
-                                {% if texto[j]['PALAVRAVOP']!='NAN' %}
-                                    palavra do vop: {{ texto[j]['PALAVRAVOP'] }}</br>
-                                    Divisão sílabica: {{ texto[j]['SILABA']}}</br>
-                                    Sílaba forte que deve ser acentuada: {{texto[j]['FORTE'] }}
-                                    classe da palavra: {{ texto[j]['CLASSE']}}</br>
-                                {% endif %}
-
-                                
-                               
-                            {% if texto[j]['MONOSSILABA']%}
-                            <p style="color:darkolivegreen"> Palavra Monossilabica</p>
+                            {% if texto[j]['n'] %}
+                                <p style="color:darkred">Palavra classificada como excessão</p><br>
+                            {% endif %}
+                            palavra como foi escrita na redação: {{ texto[j]['PALAVRAANT']}}<br>
+                            {% if texto[j]['PALAVRAVOP']!='NAN' %}
+                                escrita correta : {{ texto[j]['PALAVRAVOP'] }}<br>
+                                Divisão sílabica: {{ texto[j]['SILABA']}}<br>
+                                Sílaba forte que deve ser acentuada: {{texto[j]['FORTE'] }}
+                                classe gramatical da palavra: {{ texto[j]['CLASSE']}}<br>
+                            {% endif %}
+                            {%if texto[j]['REGRANaoVERB']!=0 %}
+                                        Classificação gramatical apoia a regra da terminação da palavra: {{texto[j]['REGRANaoVERB']}}</br>
                             {% endif%}
+                            {% if texto[j]['MONOSSILABA']%}
+                            <p style="color:darkolivegreen"> Classificação gramatical apoia das palavras monossilabicas </p>
+                            {% endif%}
+                            {% if texto[j]['REGRAVERB']!=0 %}
+                                Classificação gramatical apoia a regra de verbo: {{texto[j]['REGRAVERB']}}</br>
+                                {% if texto[j]['REGRAVERB']=='proparoxítona' %}
+                                    Palavra classificada como proparoxítona, pois é um verbo terminado em (amos,ssemos)
+                                {% elif texto[j]['REGRAVERB']=='paroxítona' %}    
+                                    Palavra classificada como paroxítona, pois é um verbo terminado em (eis,reis,sseis)
+                                {% elif texto[j]['REGRAVERB']=='oxítona' %}
+                                    Palavra classificada como oxítona, pois é um verbo terminado em (eis,reis,sseis)
+                                {% endif %}
+                            {% endif %}
+                            
                     </p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                        </div>
-                        <small class="text-muted">9 mins</small>
-                    </div>
-                   
                 </div>
             </div>
         </div>
