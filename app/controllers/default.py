@@ -1,9 +1,8 @@
 import os
+from flask_cors import CORS
 from flask import render_template
 from app import app
-from app.models.forms import TextoForm
 from urllib import request
-from flask_cors import CORS
 
 
 cors = CORS(app, resource={r"/*":{"origins": "*"}})
@@ -16,11 +15,11 @@ def teste():
     texto = 'bla'
     titulo = 'new'
     return render_template('mostraconteudo.html',texto=texto,titulo=titulo)
-    # your code
-    # return a response
-
-
-@app.route('/novo')
-def novo():
-    #form = TextoForm()
+@app.route('/escreverTexto')
+def escreverTexto():
     return render_template('index.html')
+
+def main():
+    port = int(os.environ.get("PORT", 5000))
+if __name__ == "__main__":
+    main()

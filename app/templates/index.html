@@ -1,32 +1,31 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="row">
+  <div class="col-lg-6 mb-5 mb-lg-0">
+    <form action="{{ url_for('processamento') }}" method="POST">
 
-<form class="form-horizontal col-sm-6 col-sm-offset-3"action="{{ url_for('handle_data') }}" method="POST">
-    <div class="form-group">
-      <label class="control-label col-sm-4" for="user-name">Título</label>
-      <div class="input-group">
-        <span class="input-group-addon">
-          <i class="fa fa-user"></i>
-        </span>
-        <input type="text" class="form-control" id="titulo"  name="titulo">
+      <div class="row form-group">
+        <div class="col-md-6 mb-3 mb-md-0">
+          <label class="text-black" for="fname">Titulo:</label>
+          <input type="text" class="form-control" id="titulo"  name="titulo">
+        </div>
+        
+
+      <div class="row form-group">
+        <div class="col-md-12">
+          <label class="text-black" for="message">Texto></label> 
+          <textarea autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="form-control" rows="20"  cols="50"  id="message" name="message">ola</textarea>
+        </div>
       </div>
-    </div>
-    
-    <div class="form-group">
-      <label class="control-label col-sm-3" for="message">Digite seu texto aqui:</label>
-      <div class="input-group">
-        <span class="input-group-addon">
-          <i class="fa fa-pencil"></i>
-        </span>
-        <textarea autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="form-control" rows="20"  cols="50"  id="texto" name="texto">ola</textarea> 
+
+      <div class="row form-group">
+        <div class="col-md-12">
+          <input type="submit" value="Send Message" class="btn btn-primary btn-md text-white">
+        </div>
       </div>
-    </div>
-    
-    <button type="submit" id="send_form" name="send_form" value="send" class="btn btn-warning col-sm-4 col-sm-offset-4">
-      Enviar Texto.
-      <i class="fa fa-paper-plane"></i>
-    </button>
-  </form>
+    </form>
+  </div>
+  </div>
   
   {% endblock %}
