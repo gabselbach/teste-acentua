@@ -1,0 +1,70 @@
+{% extends 'teste.html' %}
+
+{% block content %}
+<section id="hero">
+  <div class="hero-container">
+    <h3>Bem Vindo ao <strong>Acentua Fácil</strong></h3>
+    <h1>Escreve aqui</h1>
+    <h2>oi</h2>
+    <a href="#contact" class="btn-get-started scrollto">Escrever texto</a>
+  </div>
+</section><!-- End Hero -->
+
+<main id="main">
+  <section id="contact" class="contact">
+    <div class="container">
+      <div class="container-mensagem">
+        <div id="mensagem">
+          <button id="btn-fechar" class="botao">Fechar</button>
+            <h4>Acento Agudo(´)</h4>
+            <p>Acento usado para indicar vogais tônicas. Quando estão entre e e ou indicam um timbre aberto.</p>
+            <h4>Acento Grave(`)</h4>
+            <p>Conhecida também como crase, seu uso acontece apenas antes de palavras femininas ou expressões que indicam tempo.</p>
+            <h4>Acento Circunflexo(^)</h4>
+            <p>Usado apenas nas vogais tônicas: a,e, o indicam timbre fechado </p>
+            <h4>Til(~)</h4>
+            <p>Este acento estará presente apenas nas vogais {a,o}. Representa uma pronuncia anasalada, podendo estar em encontros vocálicos ou na última sílaba</p>
+            <h6 class="fonte">Fonte:https://www.figuradelinguagem.com/</h6>
+          
+        </div>
+      </div>
+      <div class="row mt-5">
+        <button id="btn" class="botao">Tipos de Acento</button>
+        <div class="col-lg-8 mt-5 mt-lg-0" id="caixa">
+          <form action="{{ url_for('processamento') }}" method="POST" class="php-email-form">
+            <div class="form-group">
+              <input type="text" class="form-control" name="titulo" id="subject" placeholder="Titulo"
+                data-rule="minlen:4" data-msg="Por favor digite um titulo valido" />
+              <div class="validate"></div>
+            </div>
+            <div class="form-group">
+              <textarea class="form-control" name="message" rows="15" data-rule="required" autocomplete="off"
+                autocorrect="off" autocapitalize="off" spellcheck="false" data-msg="Digite um texto valido"
+                placeholder="Digite seu texto aqui">
+              </textarea>
+              <div class="validate"></div>
+            </div>
+            <div class="text-center"><button type="submit"> Enviar para análise</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section><!-- End Contact Section -->
+  <script text="javascript">
+    var btn = document.querySelector('#btn');
+    var caixa = document.querySelector('#caixa');
+    var btnFechar = document.querySelector('#btn-fechar');
+    var mensagem = document.querySelector('.container-mensagem');
+
+    btn.addEventListener('click', function () {
+      mensagem.style.display = 'flex';
+      caixa.style.position='static';
+    });
+
+    btnFechar.addEventListener('click', function () {
+      mensagem.style.display = 'none';
+    });
+
+
+  </script>
+  {% endblock %}
