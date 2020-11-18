@@ -1,0 +1,85 @@
+{% extends 'teste.html' %}
+{% block content %}
+<main id="main">
+    <!-- ======= Breadcrumbs ======= -->
+    <section id="breadcrumbs" class="breadcrumbs">
+        <div class="container">
+            <ol>
+                <li><a href="/">Início</a></li>
+                <li>Análise do texto</li>
+            </ol>
+            <h2>Análise do Texto</h2>
+
+        </div>
+    </section><!-- End Breadcrumbs -->
+
+    <!-- ======= Blog Section ======= -->
+    <section id="blog" class="blog">
+        <div class="container">
+
+            <div class="row">
+                <h2 class="entry-title">
+                    <a href="#">Título do texto: {{ titulo }}</a>
+                </h2>
+                <div class="entry-meta">
+                    <ul>
+                        <li class="d-flex align-items-center"><i class="icofont-user"></i>Excessões:</li>
+                    </ul><p>
+                    {% for j in range(ex|length) %}
+                    {{ ex[j]['PALAVRAANT']}}
+                    {% endfor %} </p> 
+                </div>
+                <div class="blog-author clearfix">
+                    <h3>Palavras que apresentam algum tipo de erro de acentuação:</h3>
+                </div>
+              
+                <div class="col-lg-12 entries">
+                    <div class="row">
+                        {% for j in range(texto|length) %}
+                        {% if texto[j]['PALAVRAANT']!=texto[j]['PALAVRAVOP'] and (texto[j]['PALAVRAANT']|length > 1) and texto[j]['ACENTO'] and not texto[j]['n'] and texto[j]['MONOSSILABA']!=0 %}
+                        <div class="col-md-4 d-flex align-items-stretch">
+                            <article class="entry">
+
+                                <div class="entry-content">
+                                    <p>palavra como foi escrita na redação: {{ texto[j]['PALAVRAANT']}}</p>
+                                    {% if texto[j]['PALAVRAVOP']!='NAN' %}
+                                    <p>escrita correta : {{ texto[j]['PALAVRAVOP'] }}</p>
+                                    <p>Divisão sílabica: {{ texto[j]['SILABA']}}</p>
+                                    <p>Sílaba forte que deve ser acentuada: {{texto[j]['FORTE'] }}</p>
+                                    <p>classe gramatical da palavra: {{ texto[j]['CLASSE']}}</p>
+                                    {% endif %}
+                                    {%if texto[j]['REGRANaoVERB']!=0 %}
+                                    <p>Classificação gramatical apoia a regra da terminação da palavra:
+                                        {{texto[j]['REGRANaoVERB']}}</p>
+                                    <p>Tendo como sílaba mais forte e que deve ser acentuada: {{ texto[j]['FORTE'] }}
+                                    </p>
+                                    {% endif%}
+                                    {% if texto[j]['MONOSSILABA']!=0 and texto[j]['MONOSSILABA']!=1 %}
+                                    <p style="color:darkolivegreen"> {{texto[j]['MONOSSILABA']}} </p>
+                                    {% endif%}
+                                    {% if texto[j]['REGRAVERB']!=0 %}
+                                    <p>Classificação gramatical apoia a regra de verbo: {{texto[j]['REGRAVERB']}}</br>
+                                        {% if texto[j]['REGRAVERB']=='proparoxítona' %}</p>
+                                    <p> Palavra classificada como proparoxítona, pois é um verbo terminado em
+                                        (amos,ssemos)
+                                        {% elif texto[j]['REGRAVERB']=='paroxítona' %} </p>
+                                    <p>Palavra classificada como paroxítona, pois é um verbo terminado em
+                                        (eis,reis,sseis)
+                                        {% elif texto[j]['REGRAVERB']=='oxítona' %}</p>
+                                    <p>Palavra classificada como oxítona, pois é um verbo terminado em (rá,rás,rão)
+                                        {% endif %}</p>
+                                    <p>Sílaba forte que deve ser acentuada: {{ texto[j]['FORTE'] }} </p>
+                                    {% endif %}
+                                </div>
+                            </article>
+                        </div>
+                        {%endif%}
+                        {%endfor%}
+                    </div>
+
+
+                </div><!-- End blog entries list -->
+            </div>
+        </div>
+    </section>
+    {% endblock %}
