@@ -16,7 +16,6 @@ click==7.1.2
 colorama==0.4.1
 ConfigArgParse==0.15.1
 cryptography==2.1.4
-cupshelpers==1.0
 cycler==0.10.0
 cymem==2.0.3
 decorator==4.4.2
