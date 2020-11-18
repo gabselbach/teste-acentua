@@ -89,7 +89,6 @@ pyasn1==0.4.7
 pyasn1-modules==0.2.6
 pycairo==1.16.2
 pycrypto==2.6.1
-pycups==1.9.73
 pycurl==7.43.0.1
 pyfreeling==0.1.1
 Pygments==2.6.1
@@ -119,7 +118,6 @@ six==1.15.0
 sklearn==0.0
 soupsieve==2.0.1
 spacy==2.3.2
-spacy-hunspell==0.1.0
 sqlparse==0.4.1
 srsly==1.0.2
 tables==3.4.3
